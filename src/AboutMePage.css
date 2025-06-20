@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Comforter+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+html, body {
+  overflow-x: hidden;
+}
+
+#overlay {
+  font-family: 'Comforter Brush', cursive;
+}
+
+#overlay2 {
+  font-family: 'Raleway', sans-seri
+}
+
+@keyframes wind-blow-left {
+  0% {
+    transform: rotate(0deg) skewX(0deg);
+  }
+  25% {
+    transform: rotate(0.1deg) skewX(-0.1deg);
+  }
+  50% {
+    transform: rotate(0deg) skewX(-0.3deg);
+  }
+  75% {
+    transform: rotate(0.1deg) skewX(-0.1deg);
+  }
+  100% {
+    transform: rotate(0deg) skewX(0deg);
+  }
+}
+
+.hair-anim-front {
+  animation: wind-blow-left 5s ease-in-out infinite;
+  transform-origin: top left;
+}
+
+.hair-anim-side {
+  animation: wind-blow-left 6s ease-in-out infinite;
+  transform-origin: top left;
+  animation-delay: 1s;
+}
+
+.petal-container-f {
+  position: absolute;
+  top: 0%;
+  width: 80%;
+  height: 100%;
+  pointer-events: none; 
+  overflow: visible;
+  z-index: 1; 
+}
+
+.petal {
+  animation: blow-left 5s ease-in-out 1;
+  opacity: 0.8;
+  position: absolute;
+  animation-fill-mode: forwards;
+}
+
+@keyframes blow-left {
+  0% {
+    transform: translate(var(--startX), 0vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--endX), 100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+

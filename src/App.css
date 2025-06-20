@@ -36,3 +36,30 @@
     transform: rotate(360deg);
   }
 }
+
+.loading-text {
+  width: 0;
+  transition: width 6s linear;
+  overflow: hidden;
+}
+
+.filled {
+  width: 13ch; /* Adjust to text length */
+  transition: width 0s;
+}
+
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    transform: scale(1.01);
+  }
+  100% {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0);
+    transform: scale(1);
+  }
+}
+
