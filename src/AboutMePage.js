@@ -99,7 +99,7 @@ useEffect(() => {
         {petals.map((petal) => (
           <img
             key={petal.id}
-            src={`${process.env.PUBLIC_URL}/images/Petal.png`}
+            src={`${process.env.PUBLIC_URL}/images/petal.png`}
             alt="petal"
             className="petal"
             style={{
