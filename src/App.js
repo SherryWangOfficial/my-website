@@ -90,6 +90,25 @@ function Welcome() {
       >
         {"ㅤ\nㅤSherry Wangㅤ\nㅤ"}
       </h1>
+
+      {/* VERSION TEXT - position fixed bottom-left */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 20,
+          left: 20,
+          fontSize: 16,
+          color: "white",
+          fontFamily: "Garamond, serif",
+          textShadow: "0 0 5px rgba(255, 255, 255, 0.7)",
+          userSelect: "none",
+          pointerEvents: "none",
+          zIndex: 20,
+        }}
+      >
+        Version 1.03
+      </div>
+
     </div>
   );
 }
