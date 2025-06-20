@@ -106,7 +106,7 @@ function Welcome() {
           zIndex: 20,
         }}
       >
-        Version 1.03
+        Version 1.04
       </div>
 
     </div>
