@@ -99,7 +99,7 @@ useEffect(() => {
         {petals.map((petal) => (
           <img
             key={petal.id}
-            src="/images/Petal.png"
+            src={`${process.env.PUBLIC_URL}/images/Petal.png`}
             alt="petal"
             className="petal"
             style={{
@@ -141,7 +141,7 @@ useEffect(() => {
         >
           {/* Profile Image */}
           <img
-            src="/images/SW.png"
+            src={`${process.env.PUBLIC_URL}/images/SW.png`}
             alt="Sherry"
             style={{
               width: '275%',
@@ -155,7 +155,7 @@ useEffect(() => {
           />
 
           <img
-            src="/images/SW2.png"
+            src={`${process.env.PUBLIC_URL}/images/SW2.png`}
             alt="Sherry2"
             style={{
               width: '400%',
@@ -169,7 +169,7 @@ useEffect(() => {
           />
 
           <img
-            src="/images/SW3.png"
+            src={`${process.env.PUBLIC_URL}/images/SW3.png`}
             alt="Sherry3"
             style={{
               width: '500%',
@@ -193,7 +193,7 @@ useEffect(() => {
             }}
           >
             <img
-              src="/images/SWFront.png"
+              src={`${process.env.PUBLIC_URL}/images/SWFront.png`}
               alt="SherryFront"
               className="hair-anim-front"
               style={{ width: '100%', height: '100%' }}
@@ -211,7 +211,7 @@ useEffect(() => {
             }}
           >
             <img
-              src="/images/SWSide.png"
+              src={`${process.env.PUBLIC_URL}/images/SWSide.png`}
               alt="SherrySide"
               className="hair-anim-side"
               style={{ width: '100%', height: '100%' }}
