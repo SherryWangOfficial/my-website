@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import './FlowingMenu.css';
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { Link } from "react-router-dom";
+import "./FlowingMenu.css";
 
 function FlowingMenu({ items = [] }) {
   const menuRef = useRef(null);
 
   useEffect(() => {
-    const items = menuRef.current.querySelectorAll('.menu__item');
+    const items = menuRef.current.querySelectorAll(".menu__item");
 
     gsap.fromTo(
       items,
@@ -22,7 +23,7 @@ function FlowingMenu({ items = [] }) {
         x: 0,
         duration: 1,
         stagger: 0.3,
-        ease: 'power3.out',
+        ease: "power3.out",
       }
     );
   }, []);
@@ -41,13 +42,27 @@ function FlowingMenu({ items = [] }) {
 function MenuItem({ link, text, image }) {
   return (
     <div className="menu__item" style={{ position: "relative", overflow: "hidden" }}>
-      <a
-        className="menu__item-link"
-        href={link}
-        style={{ position: "relative", zIndex: 2 }}
-      >
-        {text}
-      </a>
+      {link ? (
+        <Link
+          className="menu__item-link"
+          to={link}
+          style={{ position: "relative", zIndex: 2 }}
+        >
+          {text}
+        </Link>
+      ) : (
+        <span
+          className="menu__item-link"
+          style={{
+            position: "relative",
+            zIndex: 2,
+            cursor: "default",
+            opacity: 0.6,
+          }}
+        >
+          {text}
+        </span>
+      )}
       <div
         className="hover-bg"
         style={{
