@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Silk from "./Silk";
-import FlowingMenu from "./FlowingMenu";
 import AboutMePage from './AboutMePage';
 import Contacts from './Contacts';
 import Announcement from "./Annoucement";
@@ -10,6 +9,41 @@ import BookArtPage from './BookArtStore';
 import FAQ from "./FAQ";
 import "@fontsource/fleur-de-leah";
 import "./App.css";
+
+// FlowingMenu Component with <Link>
+function FlowingMenu({ items = [] }) {
+  return (
+    <div className="menu-wrap">
+      <nav className="menu">
+        {items.map((item, idx) => (
+          <div
+            className="menu__item"
+            key={idx}
+            style={{ position: "relative", overflow: "hidden" }}
+          >
+            {item.link ? (
+              <Link
+                className="menu__item-link"
+                to={item.link}
+                style={{ position: "relative", zIndex: 2 }}
+              >
+                {item.text}
+              </Link>
+            ) : (
+              <span className="menu__item-link" style={{ position: "relative", zIndex: 2 }}>
+                {item.text}
+              </span>
+            )}
+            <div
+              className="hover-bg"
+              style={{ backgroundImage: `url(${item.image})` }}
+            />
+          </div>
+        ))}
+      </nav>
+    </div>
+  );
+}
 
 // Loading Component
 function Loading({ dots }) {
@@ -94,28 +128,30 @@ function Welcome() {
   );
 }
 
+// Home Page with Flowing Menu
 function Home() {
-const menuItems = [
-  {
-    link: "/about",
-    text: "About Sherry Wang",
-    image: `https://fastly.picsum.photos/id/82/1500/997.jpg?hmac=VcdCqu9YiLpbCtr8YowUCSUD3-245TGekiXmtiMXotw`,
-  },
-  {
-    link: "/book-art",
-    text: "Book Art Store",
-    image: `https://picsum.photos/600/400?random=5`,
-  },
-  {
-    link: null,
-    text: "🚧 UNDER CONSTRUCTION 🚧",
-    image: `https://fastly.picsum.photos/id/180/2400/1600.jpg?hmac=Ig-CXcpNdmh51k3kXpNqNqcDYTwXCIaonYiBOnLXBb8`,
-  },
-];
-
+  const menuItems = [
+    {
+      link: "/about",
+      text: "About Sherry Wang",
+      image: `https://fastly.picsum.photos/id/82/1500/997.jpg?hmac=VcdCqu9YiLpbCtr8YowUCSUD3-245TGekiXmtiMXotw`,
+    },
+    {
+      link: "/book-art",
+      text: "Book Art Store",
+      image: `https://picsum.photos/600/400?random=5`,
+    },
+    {
+      link: null,
+      text: "🚧 UNDER CONSTRUCTION 🚧",
+      image: `https://fastly.picsum.photos/id/180/2400/1600.jpg?hmac=Ig-CXcpNdmh51k3kXpNqNqcDYTwXCIaonYiBOnLXBb8`,
+    },
+  ];
 
   return (
-    <div style={{ height: "100vh", position: "relative", backgroundColor: "black" }}>
+    <div
+      style={{ height: "100vh", position: "relative", backgroundColor: "black" }}
+    >
       <FlowingMenu items={menuItems} />
     </div>
   );
@@ -133,7 +169,7 @@ function App() {
 
     const timer = setTimeout(() => {
       setLoading(false);
-      sessionStorage.setItem("hasVisited", "true"); // <-- prevents it from showing again
+      sessionStorage.setItem("hasVisited", "true");
     }, 6000);
 
     return () => clearTimeout(timer);
