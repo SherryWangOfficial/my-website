@@ -5,17 +5,72 @@ import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import booksData from "./BookArtData";
+import emailjs from '@emailjs/browser';
+import { useThree } from '@react-three/fiber';
 
 const globalDiscountEnabled = false;
 const globalDiscountPercent = 0;
 const discountedTag = ""; // e.g., "Health" or leave "" for all books
 
-function TrapezoidBlock({ imageUrl, width = 3.5, coverAngle = 25}) {
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  return isMobile;
+};
+
+const inputStyle = {
+  display: "block",
+  width: "100%",
+  padding: "10px",
+  marginTop: "10px",
+  fontSize: "1rem",
+  borderRadius: 6,
+  border: "1px solid #ccc",
+};
+
+function Toast({ message, onClose }) {
+  useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(() => {
+      onClose();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [message, onClose]);
+
+  if (!message) return null;
+
+  return (
+    <div style={{
+      position: "fixed",
+      bottom: 80,
+      right: 20,
+      backgroundColor: "#c99b66",
+      color: "white",
+      padding: "10px 20px",
+      borderRadius: 6,
+      boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+      zIndex: 100,
+      userSelect: "none",
+      fontWeight: "600",
+      fontSize: "1rem",
+    }}>
+      {message}
+    </div>
+  );
+}
+
+function TrapezoidBlock({ imageUrl, width = 3.5, coverAngle = 25, isMobile}) {
+
+  const zPos = -4 + ((window.innerWidth - 400) / 320);
+
   const meshRef = useRef();
   const groupRef = useRef();
   const currentTexture = useTexture(imageUrl);
   const [hovered, setHovered] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   // Geometry modification
   const geometry = useMemo(() => {
@@ -69,7 +124,7 @@ function TrapezoidBlock({ imageUrl, width = 3.5, coverAngle = 25}) {
   return (
     <group
       ref={groupRef}
-      position={[0, 0, -1]}
+      position={[0, 0, zPos]}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
@@ -97,10 +152,6 @@ function TrapezoidBlock({ imageUrl, width = 3.5, coverAngle = 25}) {
     </group>
   );
 }
-
-
-
-
 
 function RealisticModel() {
   const ref = useRef();
@@ -147,7 +198,7 @@ function RealisticModel() {
   );
 }
 
-function Scene({ books, currentIndex, showRealistic }) {
+function Scene({ books, currentIndex, showRealistic, isMobile}) {
   return (
     <>
       <ambientLight intensity={0.3} />
@@ -163,11 +214,10 @@ function Scene({ books, currentIndex, showRealistic }) {
             imageUrl={books[currentIndex].imageUrl}
             width={books[currentIndex].width}
             coverAngle={books[currentIndex].coverAngle}
+            isMobile={isMobile} 
           />
-
         )}
       </Suspense>
-
     </>
   );
 }
@@ -215,10 +265,38 @@ function FilterPanel({ tags, selectedTags, toggleTag, id }) {
 }
 
 export default function BookArtPage() {
+  const isMobile = useIsMobile();
   const [selectedTags, setSelectedTags] = useState(new Set());
   const [showRealistic, setShowRealistic] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [checkoutItems, setCheckoutItems] = useState([]);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [isFinalizingCheckout, setIsFinalizingCheckout] = useState(false);
+  const [currentCheckoutStep, setCurrentCheckoutStep] = useState(0);
+  const [customNotes, setCustomNotes] = useState({}); // title -> message
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userEmail, setUserEmail] = useState("");
+
+  const responsiveButtonStyle = {
+    padding: isMobile ? "5px 8px" : "5px 8px",
+    fontSize: isMobile ? "0.5rem" : "1.1rem",
+    borderRadius: 6,
+    border: "none",
+    cursor: "pointer",
+    fontWeight: "600",
+    transition: "background-color 0.3s ease",
+  };
+
+  const bookListText = checkoutItems.map((book, i) => {
+  const note = customNotes[book.title] || "(none)";
+    return `#${i + 1}: ${book.title}\nNotes: ${note}`;
+  }).join("\n\n");
+
+  const totalPrice = checkoutItems.reduce((sum, book) => sum + book.price, 0).toFixed(2);
+
 
   // Gather all unique tags from books
   const allTags = useMemo(() => {
@@ -277,10 +355,17 @@ export default function BookArtPage() {
     setShowRealistic((v) => !v);
   };
 
-  // Placeholder: Add to checkout handler
+  // Add to checkout handler with no duplicates & toast
   const handleAddToCheckout = () => {
     if (currentIndex === -1) return;
-    alert(`Added "${filteredBooks[currentIndex].title}" to checkout!`);
+    const book = filteredBooks[currentIndex];
+
+    if (!checkoutItems.find(item => item.title === book.title)) {
+      setCheckoutItems(prev => [...prev, book]);
+      setToastMessage(`Added "${book.title}" to checkout!`);
+    } else {
+      setToastMessage(`"${book.title}" is already in your checkout.`);
+    }
   };
 
   return (
@@ -292,6 +377,7 @@ export default function BookArtPage() {
         overflow: "hidden",
         fontFamily: "Arial, sans-serif",
         userSelect: "none",
+        flexDirection: isMobile ? "column" : "row",
       }}
     >
       {/* Filter Button top left */}
@@ -313,6 +399,7 @@ export default function BookArtPage() {
           zIndex: 30,
           boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
           transition: "background-color 0.3s ease",
+          ...responsiveButtonStyle,
         }}
         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#b07f48")}
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#c99b66")}
@@ -338,6 +425,7 @@ export default function BookArtPage() {
           books={filteredBooks}
           currentIndex={currentIndex}
           showRealistic={showRealistic}
+          isMobile={isMobile}
         />
       </Canvas>
 
@@ -345,7 +433,7 @@ export default function BookArtPage() {
       <div
         style={{
           position: "absolute",
-          top: 20,
+          top: isMobile ? 60 : 20,
           width: "100%",
           textAlign: "center",
           color: "#333",
@@ -353,6 +441,7 @@ export default function BookArtPage() {
           boxSizing: "border-box",
           zIndex: 10,
           pointerEvents: "none",
+          ...responsiveButtonStyle,
         }}
       >
         <h1 style={{ margin: 0, fontWeight: "700" }}>
@@ -363,7 +452,7 @@ export default function BookArtPage() {
             : filteredBooks[currentIndex].title}
         </h1>
         {!showRealistic && currentIndex !== -1 && (
-          <p style={{ marginTop: 8, fontWeight: "400", fontSize: "1.1rem" }}>
+          <p style={{ marginTop: 8, fontWeight: "400", fontSize: "1.1rem", ...responsiveButtonStyle,}}>
             {filteredBooks[currentIndex].description}
           </p>
         )}
@@ -375,7 +464,7 @@ export default function BookArtPage() {
         style={{
           position: "absolute",
           top: 20,
-          right: 20,
+          left: 150,
           padding: "8px 16px",
           fontSize: "0.9rem",
           fontWeight: "600",
@@ -388,6 +477,7 @@ export default function BookArtPage() {
           zIndex: 10,
           boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
           transition: "background-color 0.3s ease",
+          ...responsiveButtonStyle,
         }}
         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#b07f48")}
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#c99b66")}
@@ -451,14 +541,23 @@ export default function BookArtPage() {
               top: "50%",
               left: 20,
               transform: "translateY(-50%)",
-              background: "none",
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // transparent black
               border: "none",
               fontSize: "3rem",
               cursor: "pointer",
               transition: "transform 0.3s ease",
               padding: 0,
-              color: "#444",
+              color: "#fff", // white arrow for contrast
               zIndex: 10,
+              width: "3.5rem",
+              height: "3.5rem",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              userSelect: "none",
+              lineHeight: 1,
+              textAlign: "center",
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "translateY(-50%) scale(1.2)")
@@ -468,8 +567,9 @@ export default function BookArtPage() {
             }
             aria-label="Previous Book"
           >
-            ←
+            <span style={{ display: "inline-block", transform: "translateY(-4px)" }}>←</span>
           </button>
+
 
           <button
             onClick={handleNext}
@@ -478,14 +578,21 @@ export default function BookArtPage() {
               top: "50%",
               right: 20,
               transform: "translateY(-50%)",
-              background: "none",
+              backgroundColor: "rgba(0, 0, 0, 0.4)", // transparent black circle
               border: "none",
               fontSize: "3rem",
               cursor: "pointer",
               transition: "transform 0.3s ease",
               padding: 0,
-              color: "#444",
+              color: "#fff", // white arrow for contrast
               zIndex: 10,
+              width: "3.5rem",
+              height: "3.5rem",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              userSelect: "none",
             }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "translateY(-50%) scale(1.2)")
@@ -495,7 +602,7 @@ export default function BookArtPage() {
             }
             aria-label="Next Book"
           >
-            →
+            <span style={{ display: "inline-block", transform: "translateY(-4px)" }}>→</span>
           </button>
 
           {/* Dots */}
@@ -506,23 +613,31 @@ export default function BookArtPage() {
               left: "50%",
               transform: "translateX(-50%)",
               display: "flex",
-              justifyContent: "center",
-              gap: 12,
+              gap: 6,
+              zIndex: 20,
               userSelect: "none",
-              zIndex: 10,
             }}
           >
-            {filteredBooks.map((_, i) => (
+            {filteredBooks.map((_, idx) => (
               <div
-                key={i}
-                onClick={() => setCurrentIndex(i)}
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
                 style={{
-                  width: i === currentIndex ? 18 : 12,
-                  height: i === currentIndex ? 18 : 12,
+                  width: 12,
+                  height: 12,
                   borderRadius: "50%",
-                  backgroundColor: i === currentIndex ? "#c99b66" : "#ccc",
+                  backgroundColor: idx === currentIndex ? "#c99b66" : "#ccc",
                   cursor: "pointer",
-                  transition: "all 0.3s ease",
+                  boxShadow: idx === currentIndex ? "0 0 6px #b07f48" : "none",
+                  transition: "background-color 0.3s ease",
+                }}
+                aria-label={`Select book ${idx + 1}`}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    setCurrentIndex(idx);
+                  }
                 }}
               />
             ))}
@@ -530,7 +645,7 @@ export default function BookArtPage() {
         </>
       )}
 
-      {/* Add to Checkout Button */}
+      {/* Checkout Button */}
       <button
         onClick={handleAddToCheckout}
         disabled={currentIndex === -1}
@@ -538,21 +653,328 @@ export default function BookArtPage() {
           position: "fixed",
           bottom: 20,
           right: 20,
-          padding: "10px 24px",
-          fontSize: "1rem",
-          fontWeight: "600",
-          cursor: currentIndex === -1 ? "not-allowed" : "pointer",
-          borderRadius: 6,
-          border: "none",
-          backgroundColor: currentIndex === -1 ? "#aaa" : "#c99b66",
+          padding: "12px 22px",
+          backgroundColor: "#c99b66",
           color: "white",
+          fontWeight: "700",
+          fontSize: "1.1rem",
+          border: "none",
+          borderRadius: 6,
+          cursor: currentIndex === -1 ? "not-allowed" : "pointer",
+          opacity: currentIndex === -1 ? 0.6 : 1,
           userSelect: "none",
-          zIndex: 10,
+          zIndex: 30,
+          boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
           transition: "background-color 0.3s ease",
+          ...responsiveButtonStyle,
         }}
+        onMouseEnter={(e) => {
+          if (!e.currentTarget.disabled) e.currentTarget.style.backgroundColor = "#b07f48";
+        }}
+        onMouseLeave={(e) => {
+          if (!e.currentTarget.disabled) e.currentTarget.style.backgroundColor = "#c99b66";
+        }}
+        aria-label="Add current book to checkout"
       >
         Add to Checkout
       </button>
+
+      {/* View Checkout Button */}
+      {checkoutItems.length > 0 && !showCheckout && (
+        <button
+          onClick={() => setShowCheckout(true)}
+          style={{
+            position: "fixed",
+            top: 20,
+            right: 20,
+            padding: "10px 18px",
+            backgroundColor: "#555",
+            color: "white",
+            fontWeight: "600",
+            border: "none",
+            borderRadius: 6,
+            cursor: "pointer",
+            zIndex: 30,
+            boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+            transition: "background-color 0.3s ease",
+            ...responsiveButtonStyle,
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#333")}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#555")}
+          aria-label="Open checkout list"
+        >
+          See Checkout
+        </button>
+      )}
+
+      {/* Checkout List Sidebar */}
+      {showCheckout && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            right: 0,
+            width: 320,
+            height: "100%",
+            backgroundColor: "white",
+            boxShadow: "-4px 0 10px rgba(0,0,0,0.15)",
+            padding: 20,
+            zIndex: 50,
+            overflowY: "auto",
+            userSelect: "text",
+          }}
+          aria-label="Checkout items list"
+        >
+          <h2 style={{ marginTop: 0, marginBottom: 12, color: "#c99b66" }}>Your Checkout</h2>
+          {checkoutItems.length === 0 ? (
+            <p>No books added yet.</p>
+          ) : (
+            <ul style={{ listStyle: "none", padding: 0 }}>
+            {checkoutItems.map((book, idx) => (
+              <li
+                key={book.title}
+                style={{
+                  marginBottom: 10,
+                  borderBottom: "1px solid #eee",
+                  paddingBottom: 10,
+                  fontWeight: "600",
+                  color: "#555",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <img src={book.imageUrl} alt={book.title} style={{ width: 40, height: 60, objectFit: "cover", borderRadius: 4 }} />
+                <span style={{ flex: 1 }}>{book.title}</span>
+                <button
+                  onClick={() =>
+                    setCheckoutItems((prev) =>
+                      prev.filter((item) => item.title !== book.title)
+                    )
+                  }
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#c99b66",
+                    fontWeight: "700",
+                    cursor: "pointer",
+                    fontSize: "1.1rem",
+                    ...responsiveButtonStyle,
+                  }}
+                  aria-label={`Remove ${book.title} from checkout`}
+                >
+                  ×
+                </button>
+              </li>
+            ))}
+          </ul>
+          )}
+
+          {checkoutItems.length > 0 && (
+  <button
+    onClick={() => {
+      setShowCheckout(false);
+      setIsFinalizingCheckout(true);
+      setCurrentCheckoutStep(0);
+    }}
+    style={{
+      marginTop: 10,
+      backgroundColor: "#4CAF50",
+      color: "white",
+      border: "none",
+      padding: "10px 20px",
+      borderRadius: 6,
+      cursor: "pointer",
+      fontWeight: "700",
+      width: "100%",
+      ...responsiveButtonStyle,
+    }}
+  >
+    Complete Checkout
+  </button>
+)}
+
+          {/* Close Checkout Button */}
+          <button
+            onClick={() => setShowCheckout(false)}
+            style={{
+              marginTop: 20,
+              backgroundColor: "#c99b66",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: 6,
+              cursor: "pointer",
+              fontWeight: "700",
+              width: "100%",
+              ...responsiveButtonStyle,
+            }}
+            aria-label="Close checkout list"
+          >
+            Close
+          </button>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+
+        {isFinalizingCheckout && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "white",
+      zIndex: 100,
+      overflowY: "auto",
+      padding: "40px 20px",
+      fontFamily: "Arial, sans-serif",
+    }}
+  >
+    {currentCheckoutStep < checkoutItems.length ? (
+      <>
+        <h2 style={{ color: "#c99b66" }}>
+          Custom Notes for: {checkoutItems[currentCheckoutStep].title}
+        </h2>
+        <img
+        src={checkoutItems[currentCheckoutStep].imageUrl}
+        alt={checkoutItems[currentCheckoutStep].title}
+        style={{ width: 120, height: 180, objectFit: "cover", borderRadius: 6, marginBottom: 20 }}
+        />
+
+        <textarea
+          placeholder= "Add any additional notes here. Note any design changes (such as adding color) will affect the price"
+          value={customNotes[checkoutItems[currentCheckoutStep].title] || ""}
+          onChange={(e) =>
+            setCustomNotes((prev) => ({
+              ...prev,
+              [checkoutItems[currentCheckoutStep].title]: e.target.value,
+            }))
+          }
+          style={{
+            width: "100%",
+            minHeight: 120,
+            fontSize: "1rem",
+            padding: 10,
+            marginTop: 10,
+            borderRadius: 6,
+            border: "1px solid #ccc",
+            resize: "vertical",
+          }}
+        />
+        <div style={{ marginTop: 20 }}>
+          <button
+            onClick={() => setCurrentCheckoutStep((s) => s + 1)}
+            style={{
+              backgroundColor: "#c99b66",
+              color: "white",
+              padding: "10px 20px",
+              fontWeight: "bold",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer",
+              ...responsiveButtonStyle,
+            }}
+          >
+            Next
+          </button>
+        </div>
+      </>
+    ) : (
+      <>
+        <h2 style={{ color: "#c99b66" }}>Enter Your Information</h2>
+<input
+  placeholder="First Name"
+  value={firstName}
+  onChange={(e) => setFirstName(e.target.value)}
+  style={inputStyle}
+/>
+<input
+  placeholder="Last Name"
+  value={lastName}
+  onChange={(e) => setLastName(e.target.value)}
+  style={inputStyle}
+/>
+<input
+  placeholder="Email"
+  type="email"
+  value={userEmail}
+  onChange={(e) => setUserEmail(e.target.value)}
+  style={inputStyle}
+/>
+
+<div style={{ marginTop: 20 }}>
+  <button
+    onClick={async () => {
+  if (!firstName.trim() || !lastName.trim() || !userEmail.trim()) {
+    setToastMessage("Please fill out all fields.");
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(userEmail)) {
+    setToastMessage("Please enter a valid email address.");
+    return;
+  }
+
+  try {
+    const bookListText = checkoutItems.map((book, i) => {
+    const note = customNotes[book.title] || "(none)";
+    return `#${i + 1}: ${book.title}\nPrice: $${book.price.toFixed(2)}\nNotes: ${note}`;
+  }).join("\n\n");
+
+    const totalPrice = checkoutItems
+      .reduce((sum, book) => sum + book.price, 0)
+      .toFixed(2);
+
+    await emailjs.send(
+      "service_jq2e4pa",
+      "template_j3f9oqk",
+      {
+        name: `${firstName} ${lastName}`,
+        email: userEmail,
+        book_list: `${bookListText}\n\nTotal: $${totalPrice}`,
+      },
+      "2__eX2BWVRQakWk7H"
+    );
+
+    setToastMessage("Order submitted to Sherry Wang successfully! Please wait for a reply back through email soon to verify purchase! Thank you!");
+    setIsFinalizingCheckout(false);
+    setShowCheckout(false);
+    setCheckoutItems([]);
+    setFirstName('');
+    setLastName('');
+    setUserEmail('');
+    setCustomNotes({});
+  } catch (err) {
+    console.error("EmailJS error:", err);
+    setToastMessage("Failed to send order. Please try again.");
+  }
+
+    }}
+    style={{
+      backgroundColor: "#4CAF50",
+      color: "white",
+      padding: "10px 20px",
+      fontWeight: "bold",
+      border: "none",
+      borderRadius: 6,
+      cursor: "pointer",
+      ...responsiveButtonStyle,
+    }}
+  >
+    Submit Order
+  </button>
+</div>
+
+      </>
+    )}
+  </div>
+)}
+
     </div>
   );
 }
