@@ -122,7 +122,7 @@ useEffect(() => {
       <div
         style={{
           minHeight: '100vh',
-          backgroundColor: 'rgba(230,231,227,1)',
+          backgroundColor: 'rgb(227, 221, 228)',
           fontFamily: 'Garamond, serif',
           display: 'flex',
           flexDirection: 'column',
@@ -144,13 +144,13 @@ useEffect(() => {
             src={`${process.env.PUBLIC_URL}/images/SW.png`}
             alt="Sherry"
             style={{
-              width: '275%',
-              height: '275%',
+              width: '235%',
+              height: '235%',
               position: 'relative',
-              transform: 'translate(-30%, -25%) rotate(10deg)',
+              transform: 'translate(-30%, -25%) rotate(0deg)',
               opacity: 1,
               zIndex: 2,
-              filter: 'drop-shadow(-25px 0px 5px rgba(160, 160, 160, 0.8))',
+              filter: 'drop-shadow(-25px 0px 5px rgba(62, 62, 62, 0.4))',
             }}
           />
 
@@ -158,10 +158,10 @@ useEffect(() => {
             src={`${process.env.PUBLIC_URL}/images/SW2.png`}
             alt="Sherry2"
             style={{
-              width: '400%',
-              height: '400%',
+              width: '300%',
+              height: '300%',
               position: 'absolute',
-              transform: 'translate(-10%, -125%) scaleX(-1)',
+              transform: 'translate(10%, -125%) scaleX(-1)',
               opacity: 1,
               zIndex: 0,
               filter: 'blur(15px) saturate(00%) brightness(1)',
@@ -181,42 +181,6 @@ useEffect(() => {
               filter: 'blur(15px) saturate(1000%) brightness(5.5)',
             }}
           />
-
-          {/* SWFront - Hair Layer 1 */}
-          <div
-            style={{
-              position: 'absolute',
-              transform: 'translate(-30%, -125%) rotate(10deg)',
-              width: '275%',
-              height: '275%',
-              zIndex: 2,
-            }}
-          >
-            <img
-              src={`${process.env.PUBLIC_URL}/images/SWFront.png`}
-              alt="SherryFront"
-              className="hair-anim-front"
-              style={{ width: '100%', height: '100%' }}
-            />
-          </div>
-
-          {/* SWside - Hair Layer 2 */}
-          <div
-            style={{
-              position: 'absolute',
-              transform: 'translate(-30%, -125%) rotate(10deg)',
-              width: '275%',
-              height: '275%',
-              zIndex: 3,
-            }}
-          >
-            <img
-              src={`${process.env.PUBLIC_URL}/images/SWSide.png`}
-              alt="SherrySide"
-              className="hair-anim-side"
-              style={{ width: '100%', height: '100%' }}
-            />
-          </div>
 
           {/* Overlay Text */}
           <div
