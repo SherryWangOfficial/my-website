@@ -111,7 +111,7 @@ useEffect(() => {
               opacity: petal.opacity,
               '--startX': petal.startX,
               '--endX': petal.endX,
-              zIndex: 5,
+              zIndex: 2,
               filter: 'blur(2px) saturate(100%) brightness(1)',
             }}
             onAnimationEnd={() => handleAnimationEnd(petal.id)}
@@ -127,16 +127,15 @@ useEffect(() => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          padding: '12rem 1rem 2rem',
+          padding: '2rem 1rem 2rem',
+          transform: 'translate(0, -50px) rotate(0deg)',
         }}
       >
         {/* Profile + Sunburst */}
         <div
           style={{
             position: 'relative',
-            width: 250,
-            height: 250,
-            marginBottom: '4rem',
+            marginBottom: '0rem',
           }}
         >
           {/* Profile Image */}
@@ -144,10 +143,11 @@ useEffect(() => {
             src={`${process.env.PUBLIC_URL}/images/SW.png`}
             alt="Sherry"
             style={{
-              width: '235%',
-              height: '235%',
+              width: '50vw',
+              height: 'auto',
               position: 'relative',
-              transform: 'translate(-30%, -25%) rotate(0deg)',
+              transformOrigin: 'center center',
+              transform: 'translate(0, 50px) rotate(0deg)',
               opacity: 1,
               zIndex: 2,
               filter: 'drop-shadow(-25px 0px 5px rgba(62, 62, 62, 0.4))',
@@ -158,13 +158,13 @@ useEffect(() => {
             src={`${process.env.PUBLIC_URL}/images/SW2.png`}
             alt="Sherry2"
             style={{
-              width: '300%',
-              height: '300%',
+              width: '100%',
+              height: '100%',
               position: 'absolute',
-              transform: 'translate(10%, -125%) scaleX(-1)',
+              transform: 'translate(-45%, 60px) scaleX(-1)',
               opacity: 1,
               zIndex: 0,
-              filter: 'blur(15px) saturate(00%) brightness(1)',
+              filter: 'blur(15px) saturate(0%) brightness(1)',
             }}
           />
 
@@ -172,10 +172,10 @@ useEffect(() => {
             src={`${process.env.PUBLIC_URL}/images/SW3.png`}
             alt="Sherry3"
             style={{
-              width: '500%',
+              width: '300%',
               height: '320%',
               position: 'absolute',
-              transform: 'translate(-75%, -125%) scaleX(1)',
+              transform: 'translate(-85%, 0px) scaleX(1)',
               opacity: 1,
               zIndex: 1,
               filter: 'blur(15px) saturate(1000%) brightness(5.5)',
@@ -187,11 +187,11 @@ useEffect(() => {
             id="overlay"
             style={{
               position: 'absolute',
-              top: '180%',
+              top: '100%',
               left: '50%',
-              transform: 'translate(-50%, -50%)',
+              transform: 'translate(-50%, 50px)',
               color: 'black',
-              fontSize: 108,
+              fontSize: 'clamp(4rem, 10vw, 6.75rem)',
               fontWeight: 'bold',
               zIndex: 3,
               whiteSpace: 'nowrap',
@@ -206,10 +206,10 @@ useEffect(() => {
             id="overlay2"
             style={{
               position: 'absolute',
-              top: '220%',
+              top: '100%',
               left: '50%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: 16,
+              transform: 'translate(-50%, 210px)',
+              fontSize: 'clamp(0rem, 1vw, 2rem)',
               zIndex: 3,
               whiteSpace: 'nowrap',
               letterSpacing: '0.1em',
@@ -230,7 +230,7 @@ useEffect(() => {
         <div
           style={{
             backgroundColor: 'rgba(232,243,254,1)',
-            padding: '15rem 0rem',
+            padding: '15rem 0rem 0rem',
             textAlign: 'left',
             borderRadius: '0px',
             overflow: 'none',
@@ -249,26 +249,38 @@ useEffect(() => {
             blurStrength={10}
             scrub={5}
           >
-            Hello I’m Sherry Wang — a book sculpture artist from Vineland, NJ,
-            where I’ve lived for more than 20 years. For over 5 years, I’ve
+            Hello I’m Sherry Wang — a book sculpture artist from NJ,
+            For over 7 years, I’ve
             transformed discarded books into art by cutting, folding, and
             twisting their pages into new shapes and meanings.
-          </ScrollReveal>
-
-          <ScrollReveal
-            baseOpacity={0}
-            enableBlur={true}
-            baseRotation={5}
-            blurStrength={10}
-            scrub={5}
-          >
             My work reimagines the book as both medium and message, celebrating
             the written word while challenging our perceptions of it. I also
             offer custom sculptures tailored to your ideas. Reach out through
             the contact page to connect or commission a piece.
           </ScrollReveal>
+      
+          <div className="footer-stack">
+          <img
+            src={`${process.env.PUBLIC_URL}/images/Left_Hand.png`}
+            alt="Left Hand"
+            className="footer-hand left-hand"
+          />
+          <img
+            src={`${process.env.PUBLIC_URL}/images/The_Book.png`}
+            alt="Book"
+            className="footer-book"
+          />
+          <img
+            src={`${process.env.PUBLIC_URL}/images/Right_Hand.png`}
+            alt="Right Hand"
+            className="footer-hand right-hand"
+          />
+        </div>
+
+
         </div>
       </div>
+
     </>
   );
 };

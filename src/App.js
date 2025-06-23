@@ -34,10 +34,11 @@ function Loading({ dots }) {
 // Welcome Component
 function Welcome() {
   return (
+    
     <div
       style={{
         position: "absolute",
-        top: 0,
+        top: 50,
         left: 0,
         width: "100vw",
         height: "100vh",
@@ -53,15 +54,28 @@ function Welcome() {
         textAlign: "center",
       }}
     >
+
+      <div className="phoenix-wrapper">
+        <img
+          src={`${process.env.PUBLIC_URL}/images/Phoenix.gif`}
+          alt="Flying Phoenix"
+          className="phoenix-animation"
+        />
+      </div>
+
+
       <div
         style={{
-          fontSize: 28,
-          marginBottom: "-0.5em",
-          textShadow: "0 0 5px rgba(255, 255, 255, 0.7)",
-          lineHeight: 1.2,
-          marginLeft: "auto",
-          marginRight: "auto",
-          transform: "translate(-180px, 140px)",
+              fontSize: 'clamp(1rem, 5vw, 2.75rem)',
+              marginLeft: 'clamp(-5em, -15vw, 0em)',
+              marginBottom: 'clamp(-10em, 5vw, -3em)',
+              textShadow: "0 0 5px rgba(255, 255, 255, 0.7)",
+              lineHeight: 1.2,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              textAlign: "center",
         }}
       >
         Welcome to
@@ -69,7 +83,7 @@ function Welcome() {
 
       <h1
         style={{
-          fontSize: 120,
+          fontSize: 'clamp(4rem, 10vw, 6.75rem)',
           margin: "0.1em 0",
           fontFamily: "'Fleur De Leah', cursive",
           animation: "glowPulse 3s ease-in-out infinite",
@@ -153,7 +167,7 @@ function App() {
     const timer = setTimeout(() => {
       setLoading(false);
       sessionStorage.setItem("hasVisited", "true"); // <-- prevents it from showing again
-    }, 6000);
+    }, 600000);
 
     return () => clearTimeout(timer);
   }, [loading]);
