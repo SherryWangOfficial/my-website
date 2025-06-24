@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useState, Suspense, useEffect } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
+import { Canvas, useFrame, extend} from "@react-three/fiber";
+import { useTexture, shaderMaterial} from "@react-three/drei";
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
@@ -11,6 +11,35 @@ import { useThree } from '@react-three/fiber';
 const globalDiscountEnabled = false;
 const globalDiscountPercent = 0;
 const discountedTag = ""; // e.g., "Health" or leave "" for all books
+
+const BrightnessMaterial = shaderMaterial(
+  {
+    uTexture: null,
+    uBrightness: 1,
+  },
+  // vertex shader
+  `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+  `,
+  // fragment shader
+  `
+  uniform sampler2D uTexture;
+  uniform float uBrightness;
+  varying vec2 vUv;
+
+  void main() {
+    vec4 tex = texture2D(uTexture, vUv);
+    tex.rgb *= uBrightness;
+    gl_FragColor = tex;
+  }
+  `
+);
+
+extend({ BrightnessMaterial });
 
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -63,7 +92,7 @@ function Toast({ message, onClose }) {
   );
 }
 
-function TrapezoidBlock({ imageUrl, width = 3.5, coverAngle = 25, isMobile}) {
+function TrapezoidBlock({ imageUrl, width = 3.5, coverAngle = 25, isMobile, brightness = 1 }) {
 
   const zPos = -4 + ((window.innerWidth - 400) / 320);
 
@@ -110,12 +139,11 @@ function TrapezoidBlock({ imageUrl, width = 3.5, coverAngle = 25, isMobile}) {
     <meshStandardMaterial attach="material-1" color="#e0d7c6" key="left" />,
     <meshStandardMaterial attach="material-2" color="#e0d7c6" key="top" />,
     <meshStandardMaterial attach="material-3" color="#e0d7c6" key="bottom" />,
-    <meshStandardMaterial
+    <brightnessMaterial
       attach="material-4"
-      map={currentTexture}
+      uTexture={currentTexture}
+      uBrightness={brightness}
       transparent
-      alphaTest={0.1}
-      depthWrite={false}
       key="front"
     />,
     <meshStandardMaterial attach="material-5" color="#e0d7c6" key="back" />,
@@ -215,6 +243,7 @@ function Scene({ books, currentIndex, showRealistic, isMobile}) {
             width={books[currentIndex].width}
             coverAngle={books[currentIndex].coverAngle}
             isMobile={isMobile} 
+            brightness={books[currentIndex].brightness ?? 1}
           />
         )}
       </Suspense>
@@ -280,6 +309,7 @@ export default function BookArtPage() {
   const [lastName, setLastName] = useState('');
   const [userEmail, setUserEmail] = useState("");
 
+  
   const responsiveButtonStyle = {
     padding: isMobile ? "5px 8px" : "5px 8px",
     fontSize: isMobile ? "0.5rem" : "1.1rem",
@@ -290,13 +320,16 @@ export default function BookArtPage() {
     transition: "background-color 0.3s ease",
   };
 
+    const responsiveButtonStyleBottom = {
+    bottom: isMobile ? 40 : 30,
+  };
+
   const bookListText = checkoutItems.map((book, i) => {
   const note = customNotes[book.title] || "(none)";
     return `#${i + 1}: ${book.title}\nNotes: ${note}`;
   }).join("\n\n");
 
   const totalPrice = checkoutItems.reduce((sum, book) => sum + book.price, 0).toFixed(2);
-
 
   // Gather all unique tags from books
   const allTags = useMemo(() => {
@@ -350,6 +383,18 @@ export default function BookArtPage() {
     );
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+        handleNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [filteredBooks]);
+  
   // Toggle between realistic and example model
   const toggleModel = () => {
     setShowRealistic((v) => !v);
@@ -445,17 +490,18 @@ export default function BookArtPage() {
         }}
       >
         <h1 style={{ margin: 0, fontWeight: "700" }}>
-          {showRealistic
-            ? "Realistic Model"
-            : currentIndex === -1
-            ? "No Books Found"
-            : filteredBooks[currentIndex].title}
-        </h1>
-        {!showRealistic && currentIndex !== -1 && (
-          <p style={{ marginTop: 8, fontWeight: "400", fontSize: "1.1rem", ...responsiveButtonStyle,}}>
-            {filteredBooks[currentIndex].description}
-          </p>
-        )}
+  {showRealistic
+    ? "Realistic Model"
+    : currentIndex === -1 || !filteredBooks[currentIndex]
+    ? "No Books Found"
+    : filteredBooks[currentIndex].title}
+</h1>
+
+{!showRealistic && currentIndex !== -1 && filteredBooks[currentIndex] && (
+  <p style={{ marginTop: 8, fontWeight: "400", fontSize: "1.1rem", ...responsiveButtonStyle }}>
+    {filteredBooks[currentIndex].description}
+  </p>
+)}
       </div>
 
       {/* Toggle Button top right */}
@@ -463,8 +509,8 @@ export default function BookArtPage() {
         onClick={toggleModel}
         style={{
           position: "absolute",
-          top: 20,
-          left: 150,
+          top: 60,
+          left: 20,
           padding: "8px 16px",
           fontSize: "0.9rem",
           fontWeight: "600",
@@ -613,7 +659,7 @@ export default function BookArtPage() {
               left: "50%",
               transform: "translateX(-50%)",
               display: "flex",
-              gap: 6,
+              gap: 4,
               zIndex: 20,
               userSelect: "none",
             }}
@@ -623,8 +669,8 @@ export default function BookArtPage() {
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
                 style={{
-                  width: 12,
-                  height: 12,
+                  width: "0.5vw",
+                  height: "0.5vw",
                   borderRadius: "50%",
                   backgroundColor: idx === currentIndex ? "#c99b66" : "#ccc",
                   cursor: "pointer",
@@ -667,6 +713,7 @@ export default function BookArtPage() {
           boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
           transition: "background-color 0.3s ease",
           ...responsiveButtonStyle,
+          ...responsiveButtonStyleBottom,
         }}
         onMouseEnter={(e) => {
           if (!e.currentTarget.disabled) e.currentTarget.style.backgroundColor = "#b07f48";

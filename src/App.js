@@ -55,6 +55,7 @@ function Welcome() {
       }}
     >
 
+    {/*
       <div className="phoenix-wrapper">
         <img
           src={`${process.env.PUBLIC_URL}/images/Phoenix.gif`}
@@ -62,7 +63,7 @@ function Welcome() {
           className="phoenix-animation"
         />
       </div>
-
+    */}
 
       <div
         style={{
@@ -166,8 +167,8 @@ function App() {
 
     const timer = setTimeout(() => {
       setLoading(false);
-      sessionStorage.setItem("hasVisited", "true"); // <-- prevents it from showing again
-    }, 600000);
+      sessionStorage.setItem("hasVisited", "true");
+    }, 6000);
 
     return () => clearTimeout(timer);
   }, [loading]);
