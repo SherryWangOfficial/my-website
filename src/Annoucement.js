@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import TopNavBar from './TopNavBar';
 
 const announcements = [
   {
     id: 1,
-    date: 'June 10, 2025',
-    title: 'New Book Art Series Released!',
-    content: `We’re excited to unveil a brand new series of book sculptures inspired by nature and folklore. Visit the Book Art section to explore the latest creations.`,
+    date: 'June 24, 2025',
+    title: 'New Book Art Store',
+    content: (
+      <>
+        I'm excited to unveil a brand new section of my page! With so many books in my collection,
+        I wanted to make it easier for everyone to browse and find the ones they’re most interested in—
+        right here online. Check out the{' '}
+        <Link to="/book-art" style={{ color: '#0077cc', textDecoration: 'underline' }}>
+          Book Art Store
+        </Link>
+        .
+      </>
+    ),
   },
   {
     id: 2,
-    date: 'May 28, 2025',
-    title: 'Website Update Complete',
-    content: `The website has received a major visual and performance overhaul. We’ve added smoother navigation, better image quality, and a new About Me section.`,
-  },
-  {
-    id: 3,
-    date: 'May 10, 2025',
-    title: 'Exhibition at Vineland Arts Center',
-    content: `Don’t miss the upcoming showcase at the Vineland Arts Center starting May 20th. Sherry’s latest sculptures will be on display with a live demonstration.`,
+    date: 'June 20, 2025',
+    title: 'Website Complete',
+    content: `My website has offically been launched!`,
   },
 ];
 

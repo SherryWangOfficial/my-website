@@ -7,7 +7,7 @@ const faqItems = [
     id: 1,
     question: 'What is book art?',
     answer:
-      'Book art is the creative transformation of books into visual sculptures or installations. It involves folding, cutting, and reshaping the pages and covers to create intricate designs and meaningful forms.',
+      'Book art is the creative transformation of hardcover books into visual sculptures. It involves measuring, folding, cutting, and reshaping the pages and covers to create intricate designs and meaningful forms.',
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const faqItems = [
     id: 3,
     question: 'How do you choose which books to use?',
     answer:
-      'I often look for older or donated books that are no longer readable but still hold emotional or visual value. Each piece is carefully selected to match the concept of the sculpture.',
+      'I often look for older or donated hardcover books that are no longer readable but still hold emotional or visual value. Each piece is carefully selected to match the concept of the sculpture.',
   },
   {
     id: 4,
@@ -28,7 +28,7 @@ const faqItems = [
       <>
         Yes! You can explore and purchase available pieces directly from the{' '}
         <Link to="/book-art" style={{ color: '#0077cc', textDecoration: 'underline' }}>
-          Book Art store
+          Book Art Store
         </Link>
         .
       </>

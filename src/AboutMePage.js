@@ -266,6 +266,9 @@ useEffect(() => {
             className="footer-hand left-hand"
           />
           <img
+            style={{
+              filter: 'blur(0.5px) brightness(0.95)'
+            }}
             src={`${process.env.PUBLIC_URL}/images/The_Book.png`}
             alt="Book"
             className="footer-book"
