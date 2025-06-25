@@ -4,7 +4,21 @@ import TopNavBar from './TopNavBar';
 
 const announcements = [
   {
-    id: 1,
+    id: 3,
+    date: 'June 24, 2025',
+    title: 'New Book "Lavender"',
+    content: (
+            <>
+        {' '}
+        <Link to="/book-art" style={{ color: '#0077cc', textDecoration: 'underline' }}>
+          Book Art Store
+        </Link>
+        .
+      </>
+    )
+  },
+  {
+    id: 2,
     date: 'June 24, 2025',
     title: 'New Book Art Store',
     content: (
@@ -20,7 +34,7 @@ const announcements = [
     ),
   },
   {
-    id: 2,
+    id: 1,
     date: 'June 20, 2025',
     title: 'Website Complete',
     content: `My website has offically been launched!`,
