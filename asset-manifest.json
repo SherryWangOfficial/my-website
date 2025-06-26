@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/my-website/static/css/main.a61df3eb.css",
+    "main.js": "/my-website/static/js/main.7f25d34f.js",
+    "static/js/453.124c36ed.chunk.js": "/my-website/static/js/453.124c36ed.chunk.js",
+    "static/media/fleur-de-leah-latin-400-normal.woff2": "/my-website/static/media/fleur-de-leah-latin-400-normal.5837d2fe0bfd66873999.woff2",
+    "static/media/fleur-de-leah-latin-ext-400-normal.woff2": "/my-website/static/media/fleur-de-leah-latin-ext-400-normal.814e637d5ade3b622716.woff2",
+    "static/media/fleur-de-leah-latin-400-normal.woff": "/my-website/static/media/fleur-de-leah-latin-400-normal.7124096c3d42a8fc3055.woff",
+    "static/media/fleur-de-leah-latin-ext-400-normal.woff": "/my-website/static/media/fleur-de-leah-latin-ext-400-normal.2ae998667f86f814e9e7.woff",
+    "static/media/fleur-de-leah-vietnamese-400-normal.woff2": "/my-website/static/media/fleur-de-leah-vietnamese-400-normal.c21c3c62f4ea321aad5e.woff2",
+    "static/media/fleur-de-leah-vietnamese-400-normal.woff": "/my-website/static/media/fleur-de-leah-vietnamese-400-normal.184d96cbcd788e1718f2.woff",
+    "index.html": "/my-website/index.html",
+    "main.a61df3eb.css.map": "/my-website/static/css/main.a61df3eb.css.map",
+    "main.7f25d34f.js.map": "/my-website/static/js/main.7f25d34f.js.map",
+    "453.124c36ed.chunk.js.map": "/my-website/static/js/453.124c36ed.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a61df3eb.css",
+    "static/js/main.7f25d34f.js"
+  ]
+}
