@@ -360,7 +360,7 @@ const booksData = [
   },
   {
     id: "Ellis",
-    title: "Mr. & Mrs",
+    title: "Mr. & Mrs.",
     description: "Two hearts, one journey.",
     tags: ["Love", "Family", "Art"],
     x: 0,
@@ -694,6 +694,29 @@ const booksData = [
     price: 300,
     special: "",
     imageUrl: `${process.env.PUBLIC_URL}/bookImages/WorldMap.jpeg`,
+  },
+  {
+    id: "MrMrs II",
+    title: "Mr. & Mrs. II",
+    description: "Two hearts, one journey.",
+    tags: ["Love", "Family", "Art"],
+    x: 0,
+    y: 0,
+    price: 300,
+    special: "",
+    imageUrl: `${process.env.PUBLIC_URL}/bookImages/MrMs2.jpeg`,
+    brightness: 0.9,
+  },
+  {
+    id: "Lavender",
+    title: "Lavender",
+    description: "The world at your fingertips.",
+    tags: ["Nature"],
+    x: 0,
+    y: 0,
+    price: 300,
+    special: "",
+    imageUrl: `${process.env.PUBLIC_URL}/bookImages/Lavender.jpeg`,
   },
 ];
 
