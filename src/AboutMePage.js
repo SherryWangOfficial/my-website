@@ -124,7 +124,7 @@ useEffect(() => {
         {petals.map((petal) => (
           <img
             key={petal.id}
-            src={`${process.env.PUBLIC_URL}/images/petal.png`}
+            src={`${process.env.PUBLIC_URL}/images/petal.webp`}
             alt="petal"
             className="petal"
             style={{
@@ -165,7 +165,7 @@ useEffect(() => {
         >
           {/* Profile Image */}
           <img
-            src={`${process.env.PUBLIC_URL}/images/SW.png`}
+            src={`${process.env.PUBLIC_URL}/images/SW.webp`}
             alt="Sherry"
             style={{
               width: '50vw',
@@ -180,7 +180,7 @@ useEffect(() => {
           />
 
           <img
-            src={`${process.env.PUBLIC_URL}/images/SW2.png`}
+            src={`${process.env.PUBLIC_URL}/images/SW2.webp`}
             alt="Sherry2"
             style={{
               width: '100%',
@@ -194,7 +194,7 @@ useEffect(() => {
           />
 
           <img
-            src={`${process.env.PUBLIC_URL}/images/SW3.png`}
+            src={`${process.env.PUBLIC_URL}/images/SW3.webp`}
             alt="Sherry3"
             style={{
               width: '300%',
@@ -277,7 +277,7 @@ useEffect(() => {
       
           <div className="footer-stack">
           <img
-            src={`${process.env.PUBLIC_URL}/images/Left_Hand.png`}
+            src={`${process.env.PUBLIC_URL}/images/Left_Hand.webp`}
             alt="Left Hand"
             className="footer-hand left-hand"
           />
@@ -285,12 +285,12 @@ useEffect(() => {
             style={{
               filter: 'blur(0.5px) brightness(0.95)'
             }}
-            src={`${process.env.PUBLIC_URL}/images/The_Book.png`}
+            src={`${process.env.PUBLIC_URL}/images/The_Book.webp`}
             alt="Book"
             className="footer-book"
           />
           <img
-            src={`${process.env.PUBLIC_URL}/images/Right_Hand.png`}
+            src={`${process.env.PUBLIC_URL}/images/Right_Hand.webp`}
             alt="Right Hand"
             className="footer-hand right-hand"
           />
