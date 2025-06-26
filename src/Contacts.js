@@ -1,8 +1,11 @@
 import React from 'react';
 import { SiGmail, SiInstagram } from 'react-icons/si';
 import TopNavBar from './TopNavBar';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <TopNavBar />
@@ -19,10 +22,11 @@ const Contact = () => {
           margin: '0 auto',
         }}
       >
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Get in Touch</h1>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>
+          {t('contactPage.title')}
+        </h1>
         <p style={{ fontSize: '1.125rem', marginBottom: '2rem', lineHeight: '1.6' }}>
-          I'm always happy to connect. Whether you have a question, a project idea, or just want to say hello,
-          feel free to reach out through the platforms below.
+          {t('contactPage.intro')}
         </p>
 
         <div
@@ -36,14 +40,14 @@ const Contact = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <SiGmail color="#D44638" size={32} />
             <a
-              href="mailto:sherryphoenix168@gmail.com"
+              href={`mailto:${t('contactPage.email')}`}
               style={{
                 textDecoration: 'none',
                 color: '#D44638',
                 fontWeight: 'bold',
               }}
             >
-              sherryphoenix168@gmail.com
+              {t('contactPage.email')}
             </a>
           </div>
 
@@ -59,7 +63,7 @@ const Contact = () => {
                 fontWeight: 'bold',
               }}
             >
-              @crafty_sherry
+              {t('contactPage.instagram')}
             </a>
           </div>
         </div>

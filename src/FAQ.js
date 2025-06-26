@@ -1,47 +1,36 @@
 import React, { useState } from 'react';
 import TopNavBar from './TopNavBar';
 import { Link } from 'react-router-dom';
-
-const faqItems = [
-  {
-    id: 1,
-    question: 'What is book art?',
-    answer:
-      'Book art is the creative transformation of hardcover books into visual sculptures. It involves measuring, folding, cutting, and reshaping the pages and covers to create intricate designs and meaningful forms.',
-  },
-  {
-    id: 2,
-    question: 'What inspires your book sculptures?',
-    answer:
-      'I draw inspiration from nature, mythology, and personal memories. I love incorporating organic shapes like flowers, wings, and waves, blending delicate craftsmanship with storytelling.',
-  },
-  {
-    id: 3,
-    question: 'How do you choose which books to use?',
-    answer:
-      'I often look for older or donated hardcover books that are no longer readable but still hold emotional or visual value. Each piece is carefully selected to match the concept of the sculpture.',
-  },
-  {
-    id: 4,
-    question: 'Can I buy your book art?',
-    answer: (
-      <>
-        Yes! You can explore and purchase available pieces directly from the{' '}
-        <Link to="/book-art" style={{ color: '#0077cc', textDecoration: 'underline' }}>
-          Book Art Store
-        </Link>
-        .
-      </>
-    ),
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 const FAQ = () => {
+  const { t } = useTranslation();
   const [openId, setOpenId] = useState(null);
 
   const toggleFAQ = (id) => {
     setOpenId((prev) => (prev === id ? null : id));
   };
+
+  // Build FAQ items dynamically from translation
+  const faqItems = [1, 2, 3, 4].map((id) => {
+    const question = t(`faqPage.items.${id}.question`);
+    // For item 4, answer has parts + link, else plain string
+    let answer;
+    if (id === 4) {
+      answer = (
+        <>
+          {t('faqPage.items.4.answerPart1')}{' '}
+          <Link to="/book-art" style={{ color: '#0077cc', textDecoration: 'underline' }}>
+            {t('faqPage.items.4.answerLinkText')}
+          </Link>
+          {t('faqPage.items.4.answerPart2')}
+        </>
+      );
+    } else {
+      answer = t(`faqPage.items.${id}.answer`);
+    }
+    return { id, question, answer };
+  });
 
   return (
     <>
@@ -56,7 +45,9 @@ const FAQ = () => {
           minHeight: '100vh',
         }}
       >
-        <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Frequently Asked Questions</h1>
+        <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>
+          {t('faqPage.title')}
+        </h1>
 
         {faqItems.map(({ id, question, answer }) => (
           <div
@@ -80,7 +71,7 @@ const FAQ = () => {
             >
               {question}
               <span style={{ color: '#888', fontSize: '1rem' }}>
-                {openId === id ? '▲' : '▼'}
+                {openId === id ? t('faqPage.collapse') : t('faqPage.expand')}
               </span>
             </div>
 

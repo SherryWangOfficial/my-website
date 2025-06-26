@@ -504,34 +504,6 @@ export default function BookArtPage() {
 )}
       </div>
 
-      {/* Toggle Button top right */}
-      <button
-        onClick={toggleModel}
-        style={{
-          position: "absolute",
-          top: 60,
-          left: 20,
-          padding: "8px 16px",
-          fontSize: "0.9rem",
-          fontWeight: "600",
-          cursor: "pointer",
-          borderRadius: 6,
-          border: "none",
-          backgroundColor: "#c99b66",
-          color: "white",
-          userSelect: "none",
-          zIndex: 10,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-          transition: "background-color 0.3s ease",
-          ...responsiveButtonStyle,
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#b07f48")}
-        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#c99b66")}
-        aria-label="Toggle between example and realistic model"
-      >
-        {showRealistic ? "Show Example Book" : "Show Realistic Model"}
-      </button>
-
       {/* Price Display */}
       {currentIndex !== -1 && (() => {
         const book = filteredBooks[currentIndex];

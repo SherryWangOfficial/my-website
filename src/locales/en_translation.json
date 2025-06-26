@@ -1,0 +1,68 @@
+{
+  "whoAmI": "Who Am I?",
+  "artistQuote": "Art is the heartbeat of life, turning moments into meaning and emotions into eternity.",
+  "aboutMeText": "Hello I’m Sherry Wang — a book sculpture artist from NJ, For over 7 years, I’ve transformed discarded books into art by measuring, cutting, and folding their pages into new shapes and meanings. My work reimagines the book as both medium and message, celebrating the written word while challenging our perceptions of it. I also offer custom sculptures tailored to your ideas. Reach out through the contact page to connect or commission a piece.",
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "announcements": "Announcements",
+    "gallery": "Gallery",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+    "announcementPage": {
+    "title": "Announcements",
+    "showDetails": "Show details ▼",
+    "hideDetails": "Hide details ▲",
+    "announcement1": {
+      "date": "June 24, 2025",
+      "title": "New Book \"Lavender\"",
+      "contentPart1": "Check out the",
+      "contentLinkText": "Book Art Store",
+      "contentPart2": "."
+    },
+    "announcement2": {
+      "date": "June 24, 2025",
+      "title": "New Book Art Store",
+      "contentPart1": "I'm excited to unveil a brand new section of my page! With so many books in my collection, I wanted to make it easier for everyone to browse and find the ones they’re most interested in—right here online. Check out the",
+      "contentLinkText": "Book Art Store",
+      "contentPart2": "."
+    },
+    "announcement3": {
+      "date": "June 20, 2025",
+      "title": "Website Complete",
+      "content": "My website has officially been launched!"
+    }
+  },
+  "faqPage": {
+    "title": "Frequently Asked Questions",
+    "expand": "▼",
+    "collapse": "▲",
+    "items": {
+      "1": {
+        "question": "What is book art?",
+        "answer": "Book art is the creative transformation of hardcover books into visual sculptures. It involves measuring, folding, cutting, and reshaping the pages and covers to create intricate designs and meaningful forms."
+      },
+      "2": {
+        "question": "What inspires your book sculptures?",
+        "answer": "I draw inspiration from nature, mythology, and personal memories. I love incorporating organic shapes like flowers, wings, and waves, blending delicate craftsmanship with storytelling."
+      },
+      "3": {
+        "question": "How do you choose which books to use?",
+        "answer": "I often look for older or donated hardcover books that are no longer readable but still hold emotional or visual value. Each piece is carefully selected to match the concept of the sculpture."
+      },
+      "4": {
+        "question": "Can I buy your book art?",
+        "answerPart1": "Yes! You can explore and purchase available pieces directly from the",
+        "answerLinkText": "Book Art Store",
+        "answerPart2": "."
+      }
+    }
+  },
+  "contactPage": {
+    "title": "Get in Touch",
+    "intro": "I'm always happy to connect. Whether you have a question, a project idea, or just want to say hello, feel free to reach out through the platforms below.",
+    "email": "sherryphoenix168@gmail.com",
+    "instagram": "@crafty_sherry"
+  }
+}

@@ -10,6 +10,8 @@ import BookArtPage from './BookArtStore';
 import FAQ from "./FAQ";
 import "@fontsource/fleur-de-leah";
 import "./App.css";
+import ScrollToTop from './ScrollToTop';
+
 
 // Loading Component
 function Loading({ dots }) {
@@ -193,6 +195,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutMePage />} />

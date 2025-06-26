@@ -5,8 +5,11 @@ import TopNavBar from './TopNavBar';
 import FuzzyText from './Fuzzy';
 import ShinyText from './ShinyText';
 import './AboutMePage.css';
+import { useTranslation } from 'react-i18next';
 
 const AboutMePage = () => {
+  const { t, i18n } = useTranslation();
+
   const lenisRef = useRef(null);
 
   const [petals, setPetals] = useState([]);
@@ -92,7 +95,29 @@ useEffect(() => {
 
   return (
     <>
+
       <TopNavBar />
+
+<select
+  onChange={(e) => i18n.changeLanguage(e.target.value)}
+  value={i18n.language}
+  style={{
+    padding: '6px 12px',
+    fontSize: '1rem',
+    borderRadius: '4px',
+    backgroundColor: 'white',
+    color: 'black',
+    border: '1px solid #333',
+    appearance: 'auto', // reset styling
+    WebkitAppearance: 'auto',
+    MozAppearance: 'auto',
+  }}
+>
+  <option value="en">English</option>
+  <option value="es">Español</option>
+  <option value="zh">中文</option>
+</select>
+
 
       {/* Petals container moved here for fixed position and no scrolling */}
       <div className="petal-container-f">
@@ -198,7 +223,7 @@ useEffect(() => {
               letterSpacing: '0.1em',
             }}
           >
-            Who Am I?
+            {t("whoAmI")}
           </div>
 
           {/* Overlay Text */}
@@ -216,9 +241,7 @@ useEffect(() => {
             }}
           >
             <ShinyText
-              text={
-                '"Art is the heartbeat of life, turning moments into meaning and emotions into eternity."'
-              }
+              text={t("artistQuote")}
               disabled={false}
               speed={5}
               className="custom-class"
@@ -249,14 +272,7 @@ useEffect(() => {
             blurStrength={10}
             scrub={5}
           >
-            Hello I’m Sherry Wang — a book sculpture artist from NJ,
-            For over 7 years, I’ve
-            transformed discarded books into art by cutting, folding, and
-            twisting their pages into new shapes and meanings.
-            My work reimagines the book as both medium and message, celebrating
-            the written word while challenging our perceptions of it. I also
-            offer custom sculptures tailored to your ideas. Reach out through
-            the contact page to connect or commission a piece.
+            {t("aboutMeText")}
           </ScrollReveal>
       
           <div className="footer-stack">
